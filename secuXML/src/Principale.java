@@ -1,5 +1,8 @@
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.security.PublicKey;
 
 public class Principale {
@@ -14,8 +17,8 @@ public class Principale {
         this.agent2 = new Agent("Michel2", "jdbc:mysql://localhost:8889/baseTest", args[0], args[1]);
 
         // Création des deux threads et attribution à un agent chacun
-        this.thread1 = new Thread(this.agent1);
-        this.thread2 = new Thread(this.agent2);
+        this.thread1 = new Thread(this.agent1, "Robert1");
+        this.thread2 = new Thread(this.agent2, "Michel2");
     }
 
     public void lancerThreads() {
@@ -36,36 +39,43 @@ public class Principale {
         }
     }
 
-    public void lancerProgramme() {
-        //this.agent1.sendRequest("je suis le 1");
-        //this.agent1.sendRequest("je suis le 2");
+    public void lancerProgramme() throws ParserConfigurationException, IOException, SAXException {
+        // L'agent 1 récupère un document XML non signé
+        Document docASignerEtEnvoyer1 = GestionnaireDocumentsXML.chargerCodeXMLdepuisFichier("local/sql_query_agent1.xml");
 
-        this.agent1.executerRequeteDepuisXML("shared/sql_query_agent1.xml", "shared/res_agent1.xml");
-        this.agent2.executerRequeteDepuisXML("shared/sql_query_agent2.xml", "shared/res_agent2.xml");
+        // L'agent 1 signe et envoie le document
+        boolean ok = this.agent1.signerEtEnvoyer(docASignerEtEnvoyer1, "shared/sql_query_agent1_signed.xml");
 
-        PublicKey publicKey_agent1 = this.agent1.getPublicKey();
-        PublicKey publicKey_agent2 = this.agent2.getPublicKey();
+        System.out.println("Signature obtenue ok : "+ok);
 
-        PublicKey publicKey_agent1_file = GestionnaireCles.chargerClePubliqueDepuisFichier("Robert1");
-        PublicKey publicKey_agent2_file = GestionnaireCles.chargerClePubliqueDepuisFichier("Michel2");
+        // L'agent 2 reçoit et valide le document d'après la clé publique du client 1
+        Document docAExecuter = this.agent2.recevoirEtValiderRequete("shared/sql_query_agent1_signed.xml", GestionnaireCles.chargerClePubliqueDepuisFichier(this.agent1.getNomAgent()));
 
-        //System.out.println("Clé en mémoire pour agent1 : \n " + publicKey_agent1);
-        //System.out.println("Clé sur disque pour agent1 : \n " + publicKey_agent1_file);
-        //System.out.println("Clé en mémoire pour agent2 : \n " + publicKey_agent2);
-        //System.out.println("Clé sur disque pour agent2 : \n " + publicKey_agent2_file);
+        System.out.println("Document obtenu : "+docAExecuter);
 
+        // L'agent 2 execute la requête du document
+        Document docResASignerEtEnvoyer = this.agent2.executerRequeteDepuisXML(docAExecuter);
+
+        // L'agent 2 signer et envoie la réponse
+        this.agent2.signerEtEnvoyer(docResASignerEtEnvoyer, "shared/ql_query_agent1_response_signed.xml");
+
+        // L'agent 1 reçoit et valide la signature de la réponse
+        boolean res = this.agent1.recevoirEtValiderReponse("shared/ql_query_agent1_response_signed.xml", GestionnaireCles.chargerClePubliqueDepuisFichier(this.agent2.getNomAgent()));
+
+        /*
         try {
-            Document doc  = GestionnaireDocumentsXML.signerDocumentXML(GestionnaireDocumentsXML.chargerCodeXMLdepuisFichier("shared/res_agent1.xml"), agent1.getPrivateKey(), agent2.getPublicKey());
+            Document doc  = GestionnaireDocumentsXML.signerDocumentXML(GestionnaireDocumentsXML.chargerCodeXMLdepuisFichier("shared/sql_query_agent1.xml"), agent1.getPrivateKey(), agent2.getPublicKey());
             boolean res = GestionnaireDocumentsXML.validerSignatureXML(doc, agent1.getPublicKey());
             System.out.println(res);
-            GestionnaireDocumentsXML.enregistrerCodeXMLenFichier(doc, "shared/res_agent1_signed.xml");
+            GestionnaireDocumentsXML.enregistrerCodeXMLenFichier(doc, "shared/sql_query_agent1_signed.xml");
+            this.agent1.executerRequeteDepuisXML("shared/sql_query_agent1_signed.xml", "shared/sql_query_signed_res_agent1.xml");
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
         Principale p = new Principale(args);
         p.lancerThreads();
         p.lancerProgramme();

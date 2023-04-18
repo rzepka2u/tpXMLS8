@@ -1,13 +1,13 @@
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.print.Doc;
+import javax.xml.crypto.MarshalException;
+import javax.xml.crypto.dsig.XMLSignatureException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,8 +26,6 @@ public class Agent implements Runnable {
     private final Connection con;
     private PublicKey publicKey;
     private PrivateKey privateKey;
-    private final BlockingQueue<Document> incomingQueue;
-    private final BlockingQueue<Document> outgoingQueue;
 
     /**
      * Constructeur Agent
@@ -48,8 +46,6 @@ public class Agent implements Runnable {
             System.out.println("Erreur d'accès au serveur SQL");
             throw new RuntimeException(e);
         }
-        this.incomingQueue = new LinkedBlockingQueue<>();
-        this.outgoingQueue = new LinkedBlockingQueue<>();
         this.genererCles();
     }
 
@@ -78,82 +74,90 @@ public class Agent implements Runnable {
     public void run() {
         //System.out.println("Executing " + this.nomAgent + " on thread " + Thread.currentThread().getName());
         while (!Thread.interrupted()) {
-            try {
-                processIncomingRequest();
-                processOutgoingRequest();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
         }
-    }
-
-    public void executerRequeteDepuisXML(String inputFilePath, String outputFilePath) {
-        Document loadedXml;
-        String extractedSql = "";
         try {
-            loadedXml = GestionnaireDocumentsXML.chargerCodeXMLdepuisFichier(inputFilePath);
-            extractedSql = GestionnaireDocumentsXML.extraireSQLdepuisXML(loadedXml);
-            //System.out.println("Extracted SQL: " + extractedSql);
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            System.err.println("Error during XML-SQL conversion: " + e.getMessage());
-        }
-        Statement stmt;
-        //String query = "select idacteur, nom from acteur";
-        String query = extractedSql;
-
-        try {
-            stmt = this.con.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            Document doc = GestionnaireDocumentsXML.conversionResultSQLversXML(rs, true);
-            GestionnaireDocumentsXML.enregistrerCodeXMLenFichier(doc, outputFilePath);
-            stmt.close();
-            con.close();
-
-
-        } catch (SQLException ex) {
-            System.err.println("SQLException: " + ex.getMessage());
-        } catch (ParserConfigurationException | IOException | TransformerException e) {
+            this.con.close();
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void sendRequest(String filePath) {
-        System.out.println(filePath);
-        // TODO
-        //Document request = XMLUtil.loadXML(filePath);
-        //outgoingQueue.add(request);
-    }
-
-    private void processIncomingRequest(/*PublicKey publicKey*/) {
-        /* TODO
-        Document request = incomingQueue.take();
-        if (XMLUtil.validateXML(request, publicKey)) {
-            String sql = XMLUtil.extractSQL(request);
-            ResultSet resultSet = executeQuery(sql);
-            Document response = XMLUtil.createXMLFromResultSet(resultSet);
-            outgoingQueue.add(response);
+    public Document executerRequeteDepuisXML(Document doc) {
+        String requeteSQL = GestionnaireDocumentsXML.extraireSQLdepuisXML(doc);
+        //System.out.println("Extracted SQL: " + extractedSql);
+        Statement stmt;
+        //String query = "select idacteur, nom from acteur";
+        Document docRes = null;
+        try {
+            stmt = this.con.createStatement();
+            ResultSet rs = stmt.executeQuery(requeteSQL);
+            docRes = GestionnaireDocumentsXML.conversionResultSQLversXML(rs, true);
+            stmt.close();
+        } catch (SQLException ex) {
+            System.err.println("SQLException: " + ex.getMessage());
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
         }
-        */
+        return docRes;
     }
 
-    private void processOutgoingRequest(/*PrivateKey privateKey, X509Certificate certificate*/) {
-        /* TODO
-        Document request = outgoingQueue.take();
-        String sql = XMLUtil.extractSQL(request);
-        ResultSet resultSet = executeQuery(sql);
-        Document response = XMLUtil.createXMLFromResultSet(resultSet);
-        // Signer le document XML de réponse avec la clé privée de l'agent
-        response = XMLUtil.signXML(response, privateKey, certificate);
-        // Envoyer la réponse signée à l'autre agent
-        // Implémentez la logique d'envoi ici
-         */
+    public Document recevoirEtValiderRequete(String cheminVersFichier, PublicKey clePublique) {
+        Document doc;
+        try {
+            doc = GestionnaireDocumentsXML.chargerCodeXMLdepuisFichier(cheminVersFichier);
+            System.out.println("Document obtenu : " + doc);
+
+            boolean valide = GestionnaireDocumentsXML.validerSignatureXML(doc, clePublique);
+
+        } catch (ParserConfigurationException | IOException | SAXException | MarshalException |
+                 XMLSignatureException e) {
+            throw new RuntimeException(e);
+        }
+        return doc;
+    }
+
+    public boolean signerEtEnvoyer(Document doc, String cheminVersFichier) {
+        boolean ok = false;
+        try {
+            // on signe le document doc
+            Document docsigne = GestionnaireDocumentsXML.signerDocumentXML(doc, this.privateKey, this.publicKey);
+
+            // on le place à l'emplacement souhaité
+            GestionnaireDocumentsXML.enregistrerCodeXMLenFichier(docsigne, cheminVersFichier);
+
+            // on vérifie la signature
+            ok = GestionnaireDocumentsXML.validerSignatureXML(docsigne, this.publicKey);
+
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | KeyException | MarshalException |
+                 XMLSignatureException | IOException | TransformerException e) {
+            throw new RuntimeException(e);
+        }
+        return ok;
+    }
+
+    public boolean recevoirEtValiderReponse(String cheminVersFichier, PublicKey clePublique) {
+        boolean res = false;
+        try {
+            Document doc = GestionnaireDocumentsXML.chargerCodeXMLdepuisFichier(cheminVersFichier);
+            res = GestionnaireDocumentsXML.validerSignatureXML(doc, clePublique);
+
+        } catch (ParserConfigurationException | IOException | SAXException | MarshalException |
+                 XMLSignatureException e) {
+            throw new RuntimeException(e);
+        }
+        return res;
     }
 
     public PublicKey getPublicKey() {
-        return publicKey;
+        return this.publicKey;
     }
 
     public PrivateKey getPrivateKey() {
-        return privateKey;
+        return this.privateKey;
+    }
+
+    public String getNomAgent() {
+        return nomAgent;
     }
 }
