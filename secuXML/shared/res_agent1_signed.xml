@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><RESULTAT><TUPLES><TUPLE><idActeur>4</idActeur><nom>Depardieu</nom></TUPLE></TUPLES><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>3UezFaFCSHUBXbirl2yJpdXAk0Vh9XnoD6TWLsFiHrc=</DigestValue></Reference></SignedInfo><SignatureValue>L0DhzdoOpOfRFQZ3JJ92RYwZU/pCG2n+nTbaDPV/J9FMEio6aPMAQYI0mL9ay/Vu6evGm1AUHdWf&#13;
+WP22fhcaAgH5eJNz1Oj9zt0PVlHujtZRMuS6MciWnrJpfq0XioZAY96GFBtPg4MZ/MAxXENhn07z&#13;
+9U0NItJDIia8B2dinJ4IbjWj1pmTPPR+mO2/lgFJrnmUA/MHFwPGPtNus0+eHqzBUaYLuNg8DWGS&#13;
++3rAuYGBhfCVw7pGQV/in3P44uBKltOlZZP0xpFDXkTZ/6S6RSUEpbOh7mSegEV5U1G0gr84h5qD&#13;
++/SKt+cwA7ihVn1qA/fnZhhitThK9BrxMBD12g==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>1hu5MInMb6/ucsbHCHy71fPRtWvx6MpfsHNzl3Nq0LBhpAmxFdDmUpqr3HIOBECRz1kESQkfwOHx&#13;
+tbLEFgouuW9PR9nAXxrNB5NZWElY6l94MH4KpKe6V6tr0ORZc9bVfAdjwoejaHhJDz9B3I2AX4U2&#13;
+wkofkGWQRkpVjrsJccX00t9Cek9A1emPCg78f9XPzxPQ3I/xVk1jN3GmvouEQHLw0abL/+5SQYgk&#13;
+oPk7KmCH2GbnWeKgJwhwlZZpg60iLT2lcRLWP2/cbm1zIVN+KnFz+5w7rFlncbnENsFYdY7yxZ1g&#13;
+HRzgV7vqvlX61AE9lM3MIfKpBR/db+pI0JdpkQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue></KeyInfo></Signature></RESULTAT>
