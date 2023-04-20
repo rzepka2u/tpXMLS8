@@ -1,41 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<RESULTAT>
-    <TUPLES>
-        <TUPLE>
-            <idActeur>16</idActeur>
-            <nom>Cluzet</nom>
-        </TUPLE>
-    </TUPLES>
-    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-        <SignedInfo>
-            <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-            <Reference URI="">
-                <Transforms>
-                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-                </Transforms>
-                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <DigestValue>DsUIwFCwbfWNtmvnBLf3FaVYpDE7xttJdYqBriDoJy8=</DigestValue>
-            </Reference>
-        </SignedInfo>
-        <SignatureValue>f/FKpCHxa3ACSbqUEP0n0pPpxdWkCDw4hn1Ip4KeRXThXoSXbAFH5kSOJlmCj+xshc/+2cFSLxmH&#13;
-            ew3TdJIaqegOtIrH2wXF3kbn2vGuY2oKgw2/Ne8mYKfuouG4chLOQRVffzF5GXVlplx9zX8F4Vml&#13;
-            OQaPbSiwmDo1WliANYp8BvaY8+bEpUCe0Eb4By0NTSostuyXRpxjh75kJb8Zv5D4mHz5IuQtHegX&#13;
-            34JU6ZDGpecfpyZCd8V87BTy++zATdxrfPGky62Tq+hdhZh244UM7AoyGsLdf2vGLvlwz+uSzmrP&#13;
-            etMmrCtF+Q8SEVsiMyez2i3zKvWU+ZqedyqYow==
-        </SignatureValue>
-        <KeyInfo>
-            <KeyValue>
-                <RSAKeyValue>
-                    <Modulus>78tqm1254bTsCg1sdA1Z4xk5RqDlbcyt0unHlDvO1HZfABQiiSJlLL/XaIYl/vfSXSqvMcoanylp&#13;
-                        XEZ/EsxJhE0Ov677nt+pnGTsVigyWxaRbVXgR3Nld+5NKwlN2ehjlQCYev2wMlMNUHWC43HXBu4N&#13;
-                        FeLFN7rPuhvySODKOfAVSsZfbn4gsJf6366jY7jyggE2CxUsnglj+ZJ/TZz+PUc56aQO+C2WJsYD&#13;
-                        Z5aRNucx38maNvEN114p7CXJQ/OlBXZNLyWxHtVnO2cdXn0kCBVFCzxuyTwyGJenLCMfnDFTjKIr&#13;
-                        L6FOQXG3iaAVt9BS12dSEwgBO9vE5JcbVAFkMw==
-                    </Modulus>
-                    <Exponent>AQAB</Exponent>
-                </RSAKeyValue>
-            </KeyValue>
-        </KeyInfo>
-    </Signature>
-</RESULTAT>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><RESULTAT><TUPLES><TUPLE><idActeur>7</idActeur><prenom>Marlon</prenom><nom>Brando</nom></TUPLE><TUPLE><idActeur>15</idActeur><prenom>Marion</prenom><nom>Cotillard</nom></TUPLE></TUPLES><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>WiM/2C9igZouHqJwPg5Qball5TWlh4Ki9RiWbTVI4C8=</DigestValue></Reference></SignedInfo><SignatureValue>pQQR24qv2aq7sy2jii9x8alGd+uQ068hOkADSlcFUy+ESTzjNkkXC4MCz7cyFumM3tR47nXEkxOH&#13;
+my8hGAbxt40pXfqrNIh1KScAMsR1emseRJ/X+zk0u+7IrEx2B1A09SbgQ+evSmzmfd5njPV7nXKj&#13;
+FXUPVAnlQ7H80/auQEYR4Dx7lMUHatosLCqsrHKrV90ytfKVuSKuBxwE+G1fCooKhedljlPA1RMv&#13;
+pmp5bygylqZAUPnCzSOM+0/i7MeBWGQHDUwcut5qTj28bRSh3CZoWTmYnEMUhNGOyv7GAd+enXuO&#13;
+Sh0a90lo06flXhzGIrCCxT31zK/biltyGZyzpw==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>28xY3PBBcbaiyrhxYxAr6xs4VCc1fb+04LBMnkQ+klQu7zU7hKopvYcIo90pWowTmTiU2cVlUVmS&#13;
+l+H98KB4BFW0uB9zCXdEJzOHT/lYPkZ/jNYQASqypIp0w2P+tO2pTAqt5kSnFukxmZuKFbbWO2ay&#13;
+dCWaByoHRrvImqkAGnWEznvAM1h8XSvzZukIVh+ZEQn52kU56MkwVFIdxTT8l4rl3UQVBdQTC/GA&#13;
+JXapiqC0FNXhUTBXzdF9qgu4dhFkARybrY6CP8YBT70ky9Hl7J0QAPdCNve/Q2U3jLYuObTD3j+r&#13;
+wpd0ZN8L4GTe4IwFrqnV811wQOhvMNAj4UHajQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue></KeyInfo></Signature></RESULTAT>

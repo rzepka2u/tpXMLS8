@@ -2,10 +2,11 @@
 <SELECT>
     <CHAMPS>
         <CHAMP>idacteur</CHAMP>
+        <CHAMP>prenom</CHAMP>
         <CHAMP>nom</CHAMP>
     </CHAMPS>
     <TABLES>
         <TABLE>acteur</TABLE>
     </TABLES>
-    <CONDITION>idacteur=16</CONDITION>
+    <CONDITION>prenom='Marion' OR prenom='Marlon'</CONDITION>
 </SELECT>

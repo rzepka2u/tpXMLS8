@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><RESULTAT><TUPLES><TUPLE><idFilm>1</idFilm><titre>Edward aux mains d'argent</titre><genre>fantastique</genre></TUPLE><TUPLE><idFilm>2</idFilm><titre>Alice aux pays des merveilles</titre><genre>fantastique</genre></TUPLE></TUPLES><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>oc2RuWGruyVqEpDuagQhVkPcJVJcq2RL98tQjeKO6gM=</DigestValue></Reference></SignedInfo><SignatureValue>nY25Xcaj+uVV7llNhwi2R7uqxKX2vF4E1sCRX2OE7qaws8HJCBLIfAIxSeNH07CVbGQkPCPZ9OAU&#13;
+4fpzK/l5q3tvz8MlwZRnMItZcTP5eCzXjzjsmODkGXdC4gxeaxzAw8T4xMsOfjSVTpzHrp6vCR/6&#13;
+vURJARYItJgEJigb8dOy0oji+YVy2lYG8H3XECZDEQAQotfcRmtGFXliHdX+An/6INEsoz+cpD/l&#13;
+jECnA+mc9wUxHt9Wm35Vb+BJm+dZjOMzczSK9hX06WTInoyvKYfm+wQAnrPAuvNupqDOr52FSZ9+&#13;
+LTh1N29046AJ9kclCGO03AR0G1XFrjia4sNS0A==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>6RHMZhAg643xJji0SJFkNxzg/yBusjRomxWdhpQ5MjYrV6Yk+XaYqiz0sxxfE+dYvibv9/lp5agY&#13;
+p6CNHvyEhwzrc7FpRj62sMxn744/ha85Vu1rm6ut6YMkA39iChO1BGAaSHfbH/7M/Zbyz58kQjc+&#13;
+A+JJ0t9098118eE/jKNgzO3UqejjqmSBwlqq9VGvA9KIuoZ2n8b+BrBTlwEeJJAOSB0A8cHUrRh2&#13;
+QZMczqb+9dBBoboLziQZmik9/akaQfNBcLKWdFnp9cR9J/npJVgAU5YPMB105t3H/Ma07JWxwGg2&#13;
+LMgAi2KSZ4griWqzh1I/JgXxGGkG8l6lwUHKWw==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue></KeyInfo></Signature></RESULTAT>

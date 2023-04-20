@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SELECT>
     <CHAMPS>
-        <CHAMP>idacteur</CHAMP>
-        <CHAMP>nom</CHAMP>
+        <CHAMP>idfilm</CHAMP>
+        <CHAMP>titre</CHAMP>
+        <CHAMP>genre</CHAMP>
     </CHAMPS>
     <TABLES>
-        <TABLE>acteur</TABLE>
+        <TABLE>film</TABLE>
     </TABLES>
-    <CONDITION>idacteur=15</CONDITION>
+    <CONDITION>genre='fantastique'</CONDITION>
 </SELECT>

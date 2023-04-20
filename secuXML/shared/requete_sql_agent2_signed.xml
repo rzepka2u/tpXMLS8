@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><SELECT>
+    <CHAMPS>
+        <CHAMP>idfilm</CHAMP>
+        <CHAMP>titre</CHAMP>
+        <CHAMP>genre</CHAMP>
+    </CHAMPS>
+    <TABLES>
+        <TABLE>film</TABLE>
+    </TABLES>
+    <CONDITION>genre='fantastique'</CONDITION>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>vZd08EscaCYigK9aXadRv5QVxD2t1dvlWMPaadOJVi0=</DigestValue></Reference></SignedInfo><SignatureValue>aDSqbGc8RafIQhLd3VKkh6oDofavvmC6NnpeNUUwfMzOxxqTAQLL7zieOoaZHc9apBT7Bf2UWIFD&#13;
+GYm1Q/ewtLK+oKFgecQtAiGJSBZn447HwO07BW3YfbnFPljW60r91IbadU3E8RqmTGvx6qSNKdWd&#13;
+uoohkhuv4pTIgmntVhMFiS5fxPdiOjB7XgKy/ZNEx0vmqrpBaqOA33fql98AjuTeqmdWFYI4k7LQ&#13;
+STT7dJdrLetFkG33gG9X9VIFvTb8polKQMOF5zelaeKo9dclTwjvBtX3ftQrTar1dYDXGrX8fPVN&#13;
+fa9BcWdwCkhRocfdfzzMs06CMyAtuqDPb8FVVw==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>28xY3PBBcbaiyrhxYxAr6xs4VCc1fb+04LBMnkQ+klQu7zU7hKopvYcIo90pWowTmTiU2cVlUVmS&#13;
+l+H98KB4BFW0uB9zCXdEJzOHT/lYPkZ/jNYQASqypIp0w2P+tO2pTAqt5kSnFukxmZuKFbbWO2ay&#13;
+dCWaByoHRrvImqkAGnWEznvAM1h8XSvzZukIVh+ZEQn52kU56MkwVFIdxTT8l4rl3UQVBdQTC/GA&#13;
+JXapiqC0FNXhUTBXzdF9qgu4dhFkARybrY6CP8YBT70ky9Hl7J0QAPdCNve/Q2U3jLYuObTD3j+r&#13;
+wpd0ZN8L4GTe4IwFrqnV811wQOhvMNAj4UHajQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue></KeyInfo></Signature></SELECT>
