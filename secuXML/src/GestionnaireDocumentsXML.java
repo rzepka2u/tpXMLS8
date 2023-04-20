@@ -1,5 +1,6 @@
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -22,6 +23,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.security.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -36,36 +38,45 @@ import java.util.Collections;
 public class GestionnaireDocumentsXML {
 
     /**
-     * Méthode qui permet d'enregistrer du code XML dans un fichier
-     *
-     * @param doc           document XML a enregistrer
-     * @param cheminFichier chemin du fichier
-     * @throws TransformerException si l'enregistrement est impossible
-     * @throws IOException          si la création du fichier est impossible
-     */
-    public static void enregistrerCodeXMLenFichier(Document doc, String cheminFichier) throws TransformerException, IOException {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer t = tf.newTransformer();
-        t.transform(new DOMSource(doc), new StreamResult(new File(cheminFichier)));
-    }
-
-    /**
      * Méthode qui permet de lire du code XML depuis un fichier
      *
      * @param cheminFichier chemin du fichier
      * @return document XML lu
-     * @throws ParserConfigurationException si la lecture du fichier est impossible
-     * @throws IOException                  si l'ouverture du fichier est impossible (le fichier est introuvable)
-     * @throws SAXException                 si le fichier n'est pas bien formaté pour être lu
      */
-    public static Document chargerCodeXMLdepuisFichier(String cheminFichier) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        return db.parse(new File(cheminFichier));
+    public static Document chargerCodeXMLdepuisFichier(String cheminFichier) {
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            return documentBuilder.parse(new File(cheminFichier));
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
-     * Méthode qui permet d'extraire les requêtes SELECT SQL depuis un document XML
+     * Méthode qui permet d'enregistrer du code XML dans un fichier
+     *
+     * @param doc           document XML a enregistrer
+     * @param cheminFichier chemin du fichier
+     * @return true si l'enregistrement s'est bien passé
+     */
+    public static boolean enregistrerCodeXMLenFichier(Document doc, String cheminFichier) {
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File(cheminFichier));
+            transformer.transform(source, result);
+        } catch (TransformerException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Méthode qui permet d'extraire les requêtes SELECT en SQL depuis un document XML
      *
      * @param doc document XML source
      * @return une chaine représentant la requête SQL
@@ -171,16 +182,16 @@ public class GestionnaireDocumentsXML {
      * @throws XMLSignatureException              si la création de la signature échoue
      */
     public static Document signerDocumentXML(Document doc, PrivateKey clePrivee, PublicKey clePublique) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, KeyException, MarshalException, XMLSignatureException {
-        // Création d'un XMLSignatureFactory
+        // Récupération d'un XMLSignatureFactory
         XMLSignatureFactory signatureFactory = XMLSignatureFactory.getInstance("DOM");
 
-        // Création des références et transformations nécessaires
+        // Création des références et transformations nécessaires à insérer
         Reference reference = signatureFactory.newReference("", signatureFactory.newDigestMethod(DigestMethod.SHA256, null), Collections.singletonList(signatureFactory.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null)), null, null);
 
-        // Création du SignedInfo
+        // Création du SignedInfo du document
         SignedInfo signedInfo = signatureFactory.newSignedInfo(signatureFactory.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE, (C14NMethodParameterSpec) null), signatureFactory.newSignatureMethod(SignatureMethod.RSA_SHA256, null), Collections.singletonList(reference));
 
-        // Création du KeyInfo
+        // Création du KeyInfo du document
         KeyInfoFactory keyInfoFactory = signatureFactory.getKeyInfoFactory();
         KeyValue keyValue = keyInfoFactory.newKeyValue(clePublique);
         KeyInfo keyInfo = keyInfoFactory.newKeyInfo(Collections.singletonList(keyValue));
@@ -204,14 +215,75 @@ public class GestionnaireDocumentsXML {
      */
     public static boolean validerSignatureXML(Document doc, PublicKey clePublique) throws MarshalException, XMLSignatureException {
         NodeList nodeList = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
+
         if (nodeList.getLength() == 0) {
-            throw new IllegalArgumentException("Pas de signature XML trouvée dans le document");
+            throw new ErreurSignatureException("Le document n'est pas signé");
         }
 
         XMLSignatureFactory signatureFactory = XMLSignatureFactory.getInstance("DOM");
+
         DOMValidateContext validateContext = new DOMValidateContext(clePublique, nodeList.item(0));
         XMLSignature signature = signatureFactory.unmarshalXMLSignature(validateContext);
 
         return signature.validate(validateContext);
     }
+
+    /**
+     * Méthode qui permet de récupérer un String contenant le résultat d'une requête
+     *
+     * @param doc document XML source
+     * @return un String
+     */
+    public static String getStringResultatDepuisXML(Document doc) {
+        StringBuilder resultat = new StringBuilder();
+
+        NodeList listeResultats = doc.getElementsByTagName("RESULTAT");
+
+        if (listeResultats.getLength() > 0) {
+            Element elemResultat = (Element) listeResultats.item(0);
+            NodeList listeTuples = elemResultat.getElementsByTagName("TUPLE");
+
+            for (int i = 0; i < listeTuples.getLength(); i++) {
+                Node noeudTuple = listeTuples.item(i);
+                NodeList listeChamps = noeudTuple.getChildNodes();
+
+                resultat.append("Tuple ").append(i + 1).append(":\n");
+
+                for (int j = 0; j < listeChamps.getLength(); j++) {
+                    Node noeudChamp = listeChamps.item(j);
+
+                    if (noeudChamp.getNodeType() == Node.ELEMENT_NODE) {
+                        Element elemChamp = (Element) noeudChamp;
+                        String nomChamp = elemChamp.getTagName();
+                        String valeurChamp = elemChamp.getTextContent();
+                        resultat.append(nomChamp).append(": ").append(valeurChamp).append("\n");
+                    }
+                }
+                resultat.append("\n");
+            }
+        }
+        return resultat.toString();
+    }
+
+    /**
+     * Méthode qui permet de récupérer l'ensemble du document XML sous forme de String
+     * A des fins de debugs uniquement
+     *
+     * @param doc document XML source
+     * @return un String
+     */
+    public static String getAllStringFromXML(Document doc) {
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StringWriter stringWriter = new StringWriter();
+            StreamResult result = new StreamResult(stringWriter);
+            transformer.transform(source, result);
+            return stringWriter.toString();
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+

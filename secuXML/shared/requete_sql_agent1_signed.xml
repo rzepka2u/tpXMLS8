@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><SELECT>
+    <CHAMPS>
+        <CHAMP>idacteur</CHAMP>
+        <CHAMP>nom</CHAMP>
+    </CHAMPS>
+    <TABLES>
+        <TABLE>acteur</TABLE>
+    </TABLES>
+    <CONDITION>idacteur=16</CONDITION>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>xVh1jO8y/Va9/9SXj8pJ7xCUa29D30bAiJiny1prak0=</DigestValue></Reference></SignedInfo><SignatureValue>rx0EiJEUPb2ZCi5Nj75b60oBVcZ2eR5nXCKw3iCYTFexCk8bmUu2OC2NWe1ZaFZvdMfm2Vi5MO4w&#13;
+HSJybhaYuGSvsCPtJHzqwvnst9KAkOhO+lNc/eENbUZvzbjKaQhwONUWEAfncqYvUl9gfKvsb/rY&#13;
+U0nLPrzdGI95NmIjC4+3Ke7FEvijM1i3o4yLQG8/mDHUAajPe56tU4qWS1U6jmuGzW5gy9uIWTO1&#13;
+HVt9PVh/+9wvQkMAlDXiyd+/ObggXwr/BxHfwlEgFKRNCi+ccFARuUlxYG5ER58gSBxvlZpZ19sC&#13;
+5OEub+iuscRiOb8zWkUaVBdkz/8mCHkrJoZQPQ==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>xYjTIlzhUBXTIcbxAqJo9A+i+YiZm7OKZRVaWd6JUVxZdY0hUxAtmHumo9gJJifegu8kjsSu7S69&#13;
+C1cETvtSLP+TJ0upfiJaxG+b3UpVuVLHCiP+tRB04CCffj6i+xo3fJZRFBN71rNb4BeX6EHsM85Y&#13;
+8X08TL8RMCMltDnKPsnYohG/W4hK/Wr84NNZahcxwydnSyAQy/XQ296BPb0+v5+6hEt316o6x+2N&#13;
+SlF6o7ZznAQb4lEWV+muwko04HAnYMEcercJf911j+qcC/xMwNwMl9zQMQglgNaolnwh6TYO54w5&#13;
+qZUj0pLzGj4zE2jKWmXd/ZsKtsXUfT7HwemGyQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue></KeyInfo></Signature></SELECT>

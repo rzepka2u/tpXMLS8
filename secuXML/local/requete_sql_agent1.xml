@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SELECT>
+    <CHAMPS>
+        <CHAMP>idacteur</CHAMP>
+        <CHAMP>nom</CHAMP>
+    </CHAMPS>
+    <TABLES>
+        <TABLE>acteur</TABLE>
+    </TABLES>
+    <CONDITION>idacteur=16</CONDITION>
+</SELECT>

@@ -1,19 +1,13 @@
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.print.Doc;
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.XMLSignatureException;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 import java.security.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * La classe Agent représente un agent
@@ -46,13 +40,12 @@ public class Agent implements Runnable {
             System.out.println("Erreur d'accès au serveur SQL");
             throw new RuntimeException(e);
         }
-        this.genererCles();
     }
 
     /**
      * Methode de génération des clés privée et publique.
      * Elle fait appel aux méthodes de la classe GestionnaireCles pour les générer.
-     * Elle enregistre ensuite la clé publique dans un fichier qui sera public.
+     * Elle enregistre ensuite la clé publique dans un fichier qui sera public (dans le dossier shared).
      */
     public void genererCles() {
         try {
@@ -83,11 +76,15 @@ public class Agent implements Runnable {
         }
     }
 
+    /**
+     * Méthode qui permet d'exécuter la requête issue d'un document XML
+     *
+     * @param doc document XML
+     * @return le résultat de la requête sous forme d'un document XML
+     */
     public Document executerRequeteDepuisXML(Document doc) {
         String requeteSQL = GestionnaireDocumentsXML.extraireSQLdepuisXML(doc);
-        //System.out.println("Extracted SQL: " + extractedSql);
         Statement stmt;
-        //String query = "select idacteur, nom from acteur";
         Document docRes = null;
         try {
             stmt = this.con.createStatement();
@@ -102,61 +99,95 @@ public class Agent implements Runnable {
         return docRes;
     }
 
+    /**
+     * Méthode qui permet de recevoir (récupérer) et valider un document XML contenant une requête
+     *
+     * @param cheminVersFichier chemin vers le fichier
+     * @param clePublique       clé publique de l'autre agent
+     * @return le document après verification de la signature
+     */
     public Document recevoirEtValiderRequete(String cheminVersFichier, PublicKey clePublique) {
-        Document doc;
+        Document doc = null;
         try {
             doc = GestionnaireDocumentsXML.chargerCodeXMLdepuisFichier(cheminVersFichier);
-            System.out.println("Document obtenu : " + doc);
-
             boolean valide = GestionnaireDocumentsXML.validerSignatureXML(doc, clePublique);
-
-        } catch (ParserConfigurationException | IOException | SAXException | MarshalException |
-                 XMLSignatureException e) {
+            if (!valide) throw new ErreurSignatureException("La signature du document est erronée");
+        } catch (MarshalException | XMLSignatureException e) {
             throw new RuntimeException(e);
         }
         return doc;
     }
 
+    /**
+     * Méthode qui permet de signer puis d'envoyer (enregistrer) un document XML
+     *
+     * @param doc               le document XML à signer
+     * @param cheminVersFichier chemin vers le fichier
+     * @return true si l'envoie s'est bien passé
+     */
     public boolean signerEtEnvoyer(Document doc, String cheminVersFichier) {
-        boolean ok = false;
+        boolean signatureOk = false;
+        boolean enregistrementOk = false;
         try {
             // on signe le document doc
             Document docsigne = GestionnaireDocumentsXML.signerDocumentXML(doc, this.privateKey, this.publicKey);
 
-            // on le place à l'emplacement souhaité
-            GestionnaireDocumentsXML.enregistrerCodeXMLenFichier(docsigne, cheminVersFichier);
-
             // on vérifie la signature
-            ok = GestionnaireDocumentsXML.validerSignatureXML(docsigne, this.publicKey);
+            signatureOk = GestionnaireDocumentsXML.validerSignatureXML(docsigne, this.publicKey);
+
+            // on le place à l'emplacement souhaité
+            enregistrementOk = GestionnaireDocumentsXML.enregistrerCodeXMLenFichier(docsigne, cheminVersFichier);
+
 
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | KeyException | MarshalException |
-                 XMLSignatureException | IOException | TransformerException e) {
+                 XMLSignatureException e) {
             throw new RuntimeException(e);
         }
-        return ok;
+        return signatureOk && enregistrementOk;
     }
 
+    /**
+     * Méthode qui permet de recevoir (récupérer) et valider un document XML contenant une réponse à une requête
+     *
+     * @param cheminVersFichier chemin vers le fichier
+     * @param clePublique       clé publique de l'autre agent
+     * @return true si la signature est valide
+     */
     public boolean recevoirEtValiderReponse(String cheminVersFichier, PublicKey clePublique) {
         boolean res = false;
         try {
             Document doc = GestionnaireDocumentsXML.chargerCodeXMLdepuisFichier(cheminVersFichier);
             res = GestionnaireDocumentsXML.validerSignatureXML(doc, clePublique);
 
-        } catch (ParserConfigurationException | IOException | SAXException | MarshalException |
-                 XMLSignatureException e) {
+        } catch (MarshalException | XMLSignatureException e) {
             throw new RuntimeException(e);
         }
         return res;
     }
 
+    /**
+     * Getter clé publique
+     *
+     * @return la clé publique
+     */
     public PublicKey getPublicKey() {
         return this.publicKey;
     }
 
+    /**
+     * Getter clé privée
+     *
+     * @return la clé privée
+     */
     public PrivateKey getPrivateKey() {
         return this.privateKey;
     }
 
+    /**
+     * Getter nomAgent
+     *
+     * @return le nom de l'agent
+     */
     public String getNomAgent() {
         return nomAgent;
     }
